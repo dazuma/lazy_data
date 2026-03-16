@@ -235,7 +235,7 @@ describe LazyData::Retries do
 
     it "does not share state with the original" do
       retries = LazyData::Retries.new(max_tries: 3)
-      retries.next  # consume one try
+      retries.next # consume one try
       dup = retries.reset_dup
       # Original has 2 tries left, dup should have all 3
       assert_equal 0, dup.next
