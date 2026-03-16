@@ -32,9 +32,9 @@ require "lazy_data/version"
   spec.require_paths = ["lib"]
 
   if spec.respond_to?(:metadata)
-    spec.metadata["changelog_uri"] = "https://dazuma.github.io/lazy_data/v#{::LazyData::VERSION}/file.CHANGELOG.html"
+    spec.metadata["changelog_uri"] = "https://dazuma.github.io/lazy_data/gem/v#{::LazyData::VERSION}/file.CHANGELOG.html"
     spec.metadata["source_code_uri"] = "https://github.com/dazuma/lazy_data/tree/lazy_data/v#{::LazyData::VERSION}"
     spec.metadata["bug_tracker_uri"] = "https://github.com/dazuma/lazy_data/issues"
-    spec.metadata["documentation_uri"] = "https://dazuma.github.io/lazy_data/v#{::LazyData::VERSION}"
+    spec.metadata["documentation_uri"] = "https://dazuma.github.io/lazy_data/gem/v#{::LazyData::VERSION}"
   end
 end
