@@ -41,11 +41,16 @@ module LazyData
     # @param retries [Retries,Proc] A retry manager. The default is a retry
     #     manager that tries only once. You can provide either a static retry
     #     manager or a Proc that returns a retry manager.
+    # @param lifetime [Numeric,nil] The default lifetime of a computed value.
+    #     Optional. No expiration by default if not provided. This can be
+    #     overridden in the block by returning {LazyData.expiring_value} or
+    #     calling {LazyData.raise_expiring_error} explicitly.
     # @param block [Proc] A block that can be called to attempt to compute the
     #     value given the key.
     #
-    def initialize(retries: nil, &block)
+    def initialize(retries: nil, lifetime: nil, &block)
       @retries = retries
+      @default_lifetime = lifetime
       @compute_handler = block
       @key_values = {}
       @mutex = ::Thread::Mutex.new
@@ -96,7 +101,7 @@ module LazyData
     # @raise [Exception] if a fatal error happened, or retries have been
     #     exhausted.
     #
-    def await(key, extra_args, transient_errors: nil, max_tries: 1, max_time: nil)
+    def await(key, *extra_args, transient_errors: nil, max_tries: 1, max_time: nil)
       lookup_key(key).await(key, *extra_args,
                             transient_errors: transient_errors,
                             max_tries: max_tries,
@@ -171,10 +176,6 @@ module LazyData
     # returns it.
     #
     def lookup_key(key)
-      # Optimization: check for key existence and return quickly without
-      # grabbing the mutex. This works because keys are never deleted.
-      return @key_values[key] if @key_values.key? key
-
       @mutex.synchronize do
         if @key_values.key?(key)
           @key_values[key]
@@ -185,7 +186,7 @@ module LazyData
             elsif @retries.respond_to?(:call)
               @retries.call
             end
-          @key_values[key] = Value.new(retries: retries, &@compute_handler)
+          @key_values[key] = Value.new(retries: retries, lifetime: @default_lifetime, &@compute_handler)
         end
       end
     end

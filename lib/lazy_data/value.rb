@@ -364,7 +364,7 @@ module LazyData
         @expires_at = determine_expiry(lifetime)
         @error = nil
         @retries.finish!
-        if @compute_notify.nil?
+        unless @compute_notify.nil?
           enter_backfill
           leave_compute
         end
@@ -387,7 +387,7 @@ module LazyData
       @mutex.synchronize do
         handle_success(value)
       end
-    rescue ::Exception => e # rubocop:disable Lint/RescueException
+    rescue ::StandardError => e
       if !e.is_a?(ExpiringError) && @default_lifetime
         begin
           raise ExpiringError, @default_lifetime
@@ -520,7 +520,7 @@ module LazyData
         enter_backfill
         leave_compute
       end
-      value
+      cached_value
     end
 
     ##
@@ -549,7 +549,7 @@ module LazyData
         enter_backfill
         leave_compute
       end
-      raise error
+      cached_value
     end
 
     ##

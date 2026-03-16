@@ -14,7 +14,7 @@ require "lazy_data/version"
   spec.description =
     "LazyData provides data types featuring thread-safe lazy computation. " \
     "These objects are constructed with a block that can be called to " \
-    "compute the final value, but it is not actually called until the value" \
+    "compute the final value, but it is not actually called until the value " \
     "is requested. Once requested, the computation takes place only once, " \
     "in the first thread that requested the value. Future requests will " \
     "return a cached value. Furthermore, any other threads that request " \
@@ -23,7 +23,7 @@ require "lazy_data/version"
     "provides retry and expiration features. The code was extracted from " \
     "the google-cloud-env gem that originally used it."
   spec.license = "Apache-2.0"
-  spec.homepage = "https://github.com/dazuma/toys"
+  spec.homepage = "https://github.com/dazuma/lazy_data"
 
   spec.files = ::Dir.glob("lib/**/*.rb") +
                (::Dir.glob("*.md") - ["CLAUDE.md", "AGENTS.md"]) +

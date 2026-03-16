@@ -17,7 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Main docuemntation is in lib/lazy_data.rb
+# Main documentation is in lib/lazy_data.rb
 module LazyData
   class << self
     ##
