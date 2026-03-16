@@ -17,9 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-##
-# Utility methods related to expiration
-#
+# Main docuemntation is in lib/lazy_data.rb
 module LazyData
   class << self
     ##
@@ -27,11 +25,12 @@ module LazyData
     # indicate that a value expires after the given number of seconds. Any
     # access after the expiration will cause a recomputation.
     #
-    # @param lifetime [Numeric] timeout in seconds
+    # @param lifetime [Numeric,nil] timeout in seconds, or nil to explicitly
+    #     disable expiration
     # @param value [Object] the computation result
     #
     def expiring_value(lifetime, value)
-      return value unless lifetime && lifetime.positive?
+      return value unless lifetime
       ExpiringValue.new(lifetime, value)
     end
 
@@ -46,12 +45,13 @@ module LazyData
     # Exception (in which case an error of that type will be created, and
     # passed any additional args given).
     #
-    # @param lifetime [Numeric] timeout in seconds
+    # @param lifetime [Numeric,nil] timeout in seconds, or nil to explicitly
+    #     disable expiration
     # @param error [String,Exception,Class] the error to raise
     # @param args [Array] any arguments to pass to an error constructor
     #
     def raise_expiring_error(lifetime, error, *args)
-      raise error unless lifetime && lifetime.positive?
+      raise error unless lifetime
       raise ExpiringError, lifetime if error.equal?($!)
       if error.is_a?(::Class) && error.ancestors.include?(::Exception)
         error = error.new(*args)

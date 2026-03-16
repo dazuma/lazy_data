@@ -21,7 +21,17 @@ require "lazy_data/value"
 require "lazy_data/version"
 
 ##
+# LazyData provides data types featuring thread-safe lazy computation.
 #
+# LazyData objects are constructed with a block that can be called to compute
+# the final value, but it is not actually called until the value is requested.
+# Once requested, the computation takes place only once, in the first thread
+# that requested the value. Future requests will return a cached value.
+# Furthermore, any other threads that request the value during the initial
+# computation will block until the first thread has completed the computation.
+#
+# This implementation also provides retry and expiration features. The code was
+# extracted from the google-cloud-env gem that originally used it.
 #
 module LazyData
 end

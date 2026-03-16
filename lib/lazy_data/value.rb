@@ -60,11 +60,16 @@ module LazyData
     #
     # @param retries [LazyData::Retries] A retry manager. The default is a
     #     retry manager that tries only once.
+    # @param lifetime [Numeric,nil] The default lifetime of a computed value.
+    #     Optional. No expiration by default if not provided. This can be
+    #     overridden in the block by returning {LazyData.expiring_value} or
+    #     calling {LazyData.raise_expiring_error} explicitly.
     # @param block [Proc] A block that can be called to attempt to compute
     #     the value.
     #
-    def initialize(retries: nil, &block)
+    def initialize(retries: nil, lifetime: nil, &block)
       @retries = retries || Retries.new
+      @default_lifetime = lifetime
       @compute_handler = block
       raise ArgumentError, "missing compute handler block" unless block
 
@@ -376,10 +381,20 @@ module LazyData
     #
     def perform_compute(extra_args)
       value = @compute_handler.call(*extra_args)
+      if !value.is_a?(ExpiringValue) && @default_lifetime
+        value = ExpiringValue.new(@default_lifetime, value)
+      end
       @mutex.synchronize do
         handle_success(value)
       end
     rescue ::Exception => e # rubocop:disable Lint/RescueException
+      if !e.is_a?(ExpiringError) && @default_lifetime
+        begin
+          raise ExpiringError, @default_lifetime
+        rescue ExpiringError => ee
+          e = ee
+        end
+      end
       @mutex.synchronize do
         handle_failure(e)
       end
@@ -494,7 +509,7 @@ module LazyData
     def handle_success(value)
       expires_at = nil
       if value.is_a?(ExpiringValue)
-        expires_at = determine_expiry value.lifetime
+        expires_at = determine_expiry(value.lifetime)
         value = value.value
       end
       if ::Thread.current.equal?(@computing_thread)
@@ -517,7 +532,7 @@ module LazyData
     def handle_failure(error)
       expires_at = nil
       if error.is_a?(ExpiringError)
-        expires_at = determine_expiry error.lifetime
+        expires_at = determine_expiry(error.lifetime)
         error = error.cause
       end
       if ::Thread.current.equal?(@computing_thread)

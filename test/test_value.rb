@@ -336,6 +336,45 @@ describe LazyData::Value do
       assert_equal 2, count
     end
 
+    it "uses a default lifetime when returning a value" do
+      count = 0
+      cache = LazyData::Value.new(lifetime: 0.1) do
+        count += 1
+        10
+      end
+      assert_equal 10, cache.get
+      assert_equal 1, count
+      assert_equal 10, cache.get
+      assert_equal 1, count
+      sleep 0.2
+      assert_equal 10, cache.get
+      assert_equal 2, count
+    end
+
+    it "uses a default lifetime when raising an error" do
+      count = 0
+      cache = LazyData::Value.new(lifetime: 0.1) do
+        count += 1
+        raise "count=#{count}"
+      end
+      err1 = assert_raises RuntimeError do
+        cache.get
+      end
+      assert_equal "count=1", err1.message
+      assert_equal 1, count
+      err2 = assert_raises RuntimeError do
+        cache.get
+      end
+      assert_equal "count=1", err2.message
+      assert_equal 1, count
+      sleep 0.2
+      err3 = assert_raises RuntimeError do
+        cache.get
+      end
+      assert_equal "count=2", err3.message
+      assert_equal 2, count
+    end
+
     it "successfully exits backfill" do
       count = 0
       cache = LazyData::Value.new do

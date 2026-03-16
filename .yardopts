@@ -1,0 +1,11 @@
+--no-private
+--title=LazyData
+--markup=markdown
+--markup-provider redcarpet
+--main=README.md
+./lib/lazy_data/**/*.rb
+./lib/lazy_data.rb
+-
+README.md
+LICENSE.md
+CHANGELOG.md
