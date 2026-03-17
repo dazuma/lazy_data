@@ -271,7 +271,7 @@ module LazyData
         # will have been correct at some point.
         state = internal_state
         # Don't retry unless we're in a state where retries can happen.
-        raise if [:failed, :success].include?(state[0])
+        raise if [InternalState::FAILED, InternalState::SUCCESS].include?(state.state)
         if max_tries
           # Handle retry countdown
           max_tries -= 1
@@ -288,44 +288,22 @@ module LazyData
 
     ##
     # Returns the current low-level state immediately without waiting for
-    # computation. Returns a 3-tuple (i.e. a 3-element array) in which the
-    # first element is a symbol indicating the overall state, as described
-    # below, and the second and third elements are set accordingly.
+    # computation.
     #
-    # States (the first tuple element) are:
-    # * `:pending` - The value has not been computed, or previous computation
-    #   attempts have failed but there are retries pending. The second element
-    #   will be the most recent error, or nil if no computation attempt has yet
-    #   happened. The third element will be the monotonic time of the end of
-    #   the current retry delay, or nil if there will be no delay.
-    # * `:computing` - A thread is currently computing the value. The second
-    #   element is nil. The third elements is the monotonic time when the
-    #   computation started.
-    # * `:success` - The computation is finished, and the value is returned in
-    #   the second element. The third element may be a numeric value indicating
-    #   the expiration monotonic time, or nil for no expiration.
-    # * `:failed` - The computation failed finally and no more retries will be
-    #   done. The error is returned in the second element. The third element
-    #   may be a numeric value indicating the expiration monotonic time, or nil
-    #   for no expiration.
-    #
-    # Future updates may add array elements without warning. Callers should
-    # be prepared to ignore additional unexpected elements.
-    #
-    # @return [Array]
+    # @return [InternalState]
     #
     def internal_state
       @mutex.synchronize do
         if @retries.finished?
           if @error
-            [:failed, @error, @expires_at]
+            InternalState.new(InternalState::FAILED, nil, @error, @expires_at)
           else
-            [:success, @value, @expires_at]
+            InternalState.new(InternalState::SUCCESS, @value, nil, @expires_at)
           end
         elsif @compute_notify.nil?
-          [:pending, @error, @expires_at]
+          InternalState.new(InternalState::PENDING, nil, @error, @expires_at)
         else
-          [:computing, nil, @expires_at]
+          InternalState.new(InternalState::COMPUTING, nil, nil, @expires_at)
         end
       end
     end
@@ -558,10 +536,10 @@ module LazyData
     def determine_await_retry_delay(state, expiry_time, delay_epsilon)
       cur_time = ::Process.clock_gettime(::Process::CLOCK_MONOTONIC)
       next_run_time =
-        if state[0] == :pending && state[2]
+        if state.state == InternalState::PENDING && state.expires_at
           # Run at end of the current retry delay, plus an epsilon,
           # if in pending state
-          state[2] + delay_epsilon
+          state.expires_at + delay_epsilon
         else
           # Default to run immediately otherwise
           cur_time

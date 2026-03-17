@@ -584,11 +584,31 @@ describe LazyData::Value do
   end
 
   describe "#internal_state" do
+    def assert_internal_state(cache, expected_state, expected_value, expected_error, expected_time)
+      state = cache.internal_state
+      assert_equal(expected_state, state.state)
+      if expected_value.nil?
+        assert_nil(state.value)
+      else
+        assert_equal(expected_value, state.value)
+      end
+      if expected_error.nil?
+        assert_nil(state.error)
+      else
+        assert_equal(expected_error, state.error)
+      end
+      if expected_time
+        assert_in_delta(expected_time, state.expires_at, 0.05)
+      else
+        assert_nil(state.expires_at)
+      end
+    end
+
     it "reflects initial pending state" do
       cache = LazyData::Value.new do
         1
       end
-      assert_equal [:pending, nil, nil], cache.internal_state
+      assert_internal_state(cache, :pending, nil, nil, nil)
     end
 
     it "reflects pending state after failed computation and no delay" do
@@ -599,7 +619,7 @@ describe LazyData::Value do
       err = assert_raises RuntimeError do
         cache.get
       end
-      assert_equal [:pending, err, nil], cache.internal_state
+      assert_internal_state(cache, :pending, nil, err, nil)
     end
 
     it "reflects pending state after failed computation with delay" do
@@ -610,10 +630,8 @@ describe LazyData::Value do
       err = assert_raises RuntimeError do
         cache.get
       end
-      assert_equal :pending, cache.internal_state[0]
-      assert_equal err, cache.internal_state[1]
       expected_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 0.1
-      assert_in_delta expected_time, cache.internal_state[2], 0.05
+      assert_internal_state(cache, :pending, nil, err, expected_time)
     end
 
     it "reflects computing state" do
@@ -627,8 +645,7 @@ describe LazyData::Value do
         cache.get
       end
       sleep 0.1
-      assert_equal :computing, cache.internal_state[0]
-      assert_in_delta start_time, cache.internal_state[2], 0.05
+      assert_internal_state(cache, :computing, nil, nil, start_time)
       thread.join
     end
 
@@ -637,7 +654,7 @@ describe LazyData::Value do
         3
       end
       assert_equal 3, cache.get
-      assert_equal [:success, 3, nil], cache.internal_state
+      assert_internal_state(cache, :success, 3, nil, nil)
     end
 
     it "reflects success state with expiration" do
@@ -646,9 +663,7 @@ describe LazyData::Value do
       end
       assert_equal 3, cache.get
       expected_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 1
-      assert_equal :success, cache.internal_state[0]
-      assert_equal 3, cache.internal_state[1]
-      assert_in_delta expected_time, cache.internal_state[2], 0.05
+      assert_internal_state(cache, :success, 3, nil, expected_time)
     end
 
     it "reflects error state with no expiration" do
@@ -658,7 +673,7 @@ describe LazyData::Value do
       err = assert_raises RuntimeError do
         cache.get
       end
-      assert_equal [:failed, err, nil], cache.internal_state
+      assert_internal_state(cache, :failed, nil, err, nil)
     end
 
     it "reflects error state with expiration" do
@@ -669,9 +684,7 @@ describe LazyData::Value do
         cache.get
       end
       expected_time = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 1
-      assert_equal :failed, cache.internal_state[0]
-      assert_equal err, cache.internal_state[1]
-      assert_in_delta expected_time, cache.internal_state[2], 0.05
+      assert_internal_state(cache, :failed, nil, err, expected_time)
     end
   end
 end

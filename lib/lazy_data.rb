@@ -16,6 +16,7 @@
 
 require "lazy_data/dict"
 require "lazy_data/expiry"
+require "lazy_data/internal_state"
 require "lazy_data/retries"
 require "lazy_data/value"
 require "lazy_data/version"
