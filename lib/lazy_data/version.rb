@@ -19,5 +19,5 @@ module LazyData
   # Current version of lazy_data
   # @return [String]
   #
-  VERSION = "0.0.0"
+  VERSION = "0.1.0"
 end
