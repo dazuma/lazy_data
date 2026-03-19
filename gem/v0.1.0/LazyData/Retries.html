@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: LazyData::Retries
+  
+    &mdash; LazyData
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "LazyData::Retries";
+  relpath = '../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../_index.html">Index (R)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../LazyData.html" title="LazyData (module)">LazyData</a></span></span>
+     &raquo; 
+    <span class="title">Retries</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: LazyData::Retries
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">LazyData::Retries</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>lib/lazy_data/retries.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>A simple retry manager with optional delay and backoff. It retries until
+either a configured maximum number of attempts has been reached, or a
+configurable total time has elapsed since the first failure.</p>
+
+<p>This class is not thread-safe by itself. Access should be protected by an
+external mutex.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#finish!-instance_method" title="#finish! (instance method)">#<strong>finish!</strong>  &#x21d2; self </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Cause the retry limit to be reached immediately.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#finished%3F-instance_method" title="#finished? (instance method)">#<strong>finished?</strong>  &#x21d2; true, false </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Returns true if the retry limit has been reached.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">#<strong>initialize</strong>(max_tries: 1, max_time: nil, initial_delay: 0, max_delay: nil, delay_multiplier: 1, delay_adder: 0, delay_includes_time_elapsed: false)  &#x21d2; Retries </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Create and initialize a retry manager.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#next-instance_method" title="#next (instance method)">#<strong>next</strong>(start_time: nil)  &#x21d2; Numeric<sup>?</sup> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Advance to the next attempt.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reset!-instance_method" title="#reset! (instance method)">#<strong>reset!</strong>  &#x21d2; self </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Reset to the initial attempt.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#reset_dup-instance_method" title="#reset_dup (instance method)">#<strong>reset_dup</strong>  &#x21d2; Retries </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>Create a duplicate in the reset state.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    #<strong>initialize</strong>(max_tries: 1, max_time: nil, initial_delay: 0, max_delay: nil, delay_multiplier: 1, delay_adder: 0, delay_includes_time_elapsed: false)  &#x21d2; <tt><span class='object_link'><a href="" title="LazyData::Retries (class)">Retries</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Create and initialize a retry manager.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>max_tries</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>1</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Maximum number of attempts before we give
+up altogether, or nil for no maximum. Default is 1, indicating one
+attempt and no retries.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>max_time</span>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>The maximum amount of time in seconds until
+we give up altogether, or nil for no maximum. Default is nil.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>initial_delay</span>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>0</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Initial delay between attempts, in
+seconds. Default is 0.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>max_delay</span>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Maximum delay between attempts, in
+seconds, or nil for no max. Default is nil.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>delay_multiplier</span>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>1</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Multipler applied to the delay between
+attempts. Default is 1 for no change.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>delay_adder</span>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>0</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Value added to the delay between attempts.
+Default is 0 for no change.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>delay_includes_time_elapsed</span>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>false</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Whether to deduct any
+time already elapsed from the retry delay. Default is false.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>::ArgumentError</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/lazy_data/retries.rb', line 49</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='label'>max_tries:</span> <span class='int'>1</span><span class='comma'>,</span>
+               <span class='label'>max_time:</span> <span class='kw'>nil</span><span class='comma'>,</span>
+               <span class='label'>initial_delay:</span> <span class='int'>0</span><span class='comma'>,</span>
+               <span class='label'>max_delay:</span> <span class='kw'>nil</span><span class='comma'>,</span>
+               <span class='label'>delay_multiplier:</span> <span class='int'>1</span><span class='comma'>,</span>
+               <span class='label'>delay_adder:</span> <span class='int'>0</span><span class='comma'>,</span>
+               <span class='label'>delay_includes_time_elapsed:</span> <span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='ivar'>@max_tries</span> <span class='op'>=</span> <span class='id identifier rubyid_max_tries'>max_tries</span><span class='op'>&amp;.</span><span class='id identifier rubyid_to_i'>to_i</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='op'>::</span><span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max_tries must be positive</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='ivar'>@max_tries</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ivar'>@max_tries</span><span class='period'>.</span><span class='id identifier rubyid_positive?'>positive?</span>
+  <span class='ivar'>@max_time</span> <span class='op'>=</span> <span class='id identifier rubyid_max_time'>max_time</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='op'>::</span><span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max_time must be positive</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='ivar'>@max_time</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ivar'>@max_time</span><span class='period'>.</span><span class='id identifier rubyid_positive?'>positive?</span>
+  <span class='ivar'>@initial_delay</span> <span class='op'>=</span> <span class='id identifier rubyid_initial_delay'>initial_delay</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='op'>::</span><span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>initial_delay must be nonnegative</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='ivar'>@initial_delay</span><span class='op'>&amp;.</span><span class='id identifier rubyid_negative?'>negative?</span>
+  <span class='ivar'>@max_delay</span> <span class='op'>=</span> <span class='id identifier rubyid_max_delay'>max_delay</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='op'>::</span><span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>max_delay must be nonnegative</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='ivar'>@max_delay</span><span class='op'>&amp;.</span><span class='id identifier rubyid_negative?'>negative?</span>
+  <span class='ivar'>@delay_multiplier</span> <span class='op'>=</span> <span class='id identifier rubyid_delay_multiplier'>delay_multiplier</span>
+  <span class='ivar'>@delay_adder</span> <span class='op'>=</span> <span class='id identifier rubyid_delay_adder'>delay_adder</span>
+  <span class='ivar'>@delay_includes_time_elapsed</span> <span class='op'>=</span> <span class='id identifier rubyid_delay_includes_time_elapsed'>delay_includes_time_elapsed</span>
+  <span class='id identifier rubyid_reset!'>reset!</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="finish!-instance_method">
+  
+    #<strong>finish!</strong>  &#x21d2; <tt>self</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Cause the retry limit to be reached immediately.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>self</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+109
+110
+111
+112</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/lazy_data/retries.rb', line 109</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_finish!'>finish!</span>
+  <span class='ivar'>@current_delay</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='kw'>self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="finished?-instance_method">
+  
+    #<strong>finished?</strong>  &#x21d2; <tt>true</tt>, <tt>false</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Returns true if the retry limit has been reached.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>true</tt>, <tt>false</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+90
+91
+92</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/lazy_data/retries.rb', line 90</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_finished?'>finished?</span>
+  <span class='ivar'>@current_delay</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="next-instance_method">
+  
+    #<strong>next</strong>(start_time: nil)  &#x21d2; <tt>Numeric</tt><sup>?</sup> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Advance to the next attempt.</p>
+
+<p>Returns nil if the retry limit has been reached. Otherwise, returns the
+delay in seconds until the next retry (0 for no delay). Raises an error
+if the previous call already returned nil.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>start_time</span>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>, <tt>nil</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'><p>Optional start time in monotonic time
+units. Used if delay_includes_time_elapsed is set.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Numeric</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/lazy_data/retries.rb', line 125</span>
+
+<span class='kw'>def</span> <span class='kw'>next</span><span class='lparen'>(</span><span class='label'>start_time:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>no tries remaining</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>if</span> <span class='id identifier rubyid_finished?'>finished?</span>
+  <span class='id identifier rubyid_cur_time'>cur_time</span> <span class='op'>=</span> <span class='op'>::</span><span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_clock_gettime'>clock_gettime</span><span class='lparen'>(</span><span class='op'>::</span><span class='const'>Process</span><span class='op'>::</span><span class='const'>CLOCK_MONOTONIC</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='ivar'>@current_delay</span> <span class='op'>==</span> <span class='symbol'>:reset</span>
+    <span class='id identifier rubyid_setup_first_retry'>setup_first_retry</span><span class='lparen'>(</span><span class='id identifier rubyid_cur_time'>cur_time</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_advance_delay'>advance_delay</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_advance_retry'>advance_retry</span><span class='lparen'>(</span><span class='id identifier rubyid_cur_time'>cur_time</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_adjusted_delay'>adjusted_delay</span><span class='lparen'>(</span><span class='id identifier rubyid_start_time'>start_time</span><span class='comma'>,</span> <span class='id identifier rubyid_cur_time'>cur_time</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reset!-instance_method">
+  
+    #<strong>reset!</strong>  &#x21d2; <tt>self</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Reset to the initial attempt.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>self</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+99
+100
+101
+102</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/lazy_data/retries.rb', line 99</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reset!'>reset!</span>
+  <span class='ivar'>@current_delay</span> <span class='op'>=</span> <span class='symbol'>:reset</span>
+  <span class='kw'>self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="reset_dup-instance_method">
+  
+    #<strong>reset_dup</strong>  &#x21d2; <tt><span class='object_link'><a href="" title="LazyData::Retries (class)">Retries</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    <p>Create a duplicate in the reset state</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="LazyData::Retries (class)">Retries</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+75
+76
+77
+78
+79
+80
+81
+82
+83</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/lazy_data/retries.rb', line 75</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_reset_dup'>reset_dup</span>
+  <span class='const'><span class='object_link'><a href="" title="LazyData::Retries (class)">Retries</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="#initialize-instance_method" title="LazyData::Retries#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='label'>max_tries:</span> <span class='ivar'>@max_tries</span><span class='comma'>,</span>
+              <span class='label'>max_time:</span> <span class='ivar'>@max_time</span><span class='comma'>,</span>
+              <span class='label'>initial_delay:</span> <span class='ivar'>@initial_delay</span><span class='comma'>,</span>
+              <span class='label'>max_delay:</span> <span class='ivar'>@max_delay</span><span class='comma'>,</span>
+              <span class='label'>delay_multiplier:</span> <span class='ivar'>@delay_multiplier</span><span class='comma'>,</span>
+              <span class='label'>delay_adder:</span> <span class='ivar'>@delay_adder</span><span class='comma'>,</span>
+              <span class='label'>delay_includes_time_elapsed:</span> <span class='ivar'>@delay_includes_time_elapsed</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+      <div id="footer">
+  Generated on Thu Mar 19 00:31:33 2026 by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.38 (ruby-4.0.2).
+</div>
+
+    </div>
+  </body>
+</html>
